@@ -37,6 +37,8 @@ IHost host = Host.CreateDefaultBuilder(args)
         // Register cloud storage services
         services.AddSingleton<ICloudStorageService, GoogleDriveService>();
         services.AddSingleton<ICloudStorageService, OneDriveService>();
+        services.AddSingleton<ICloudStorageService, FtpService>();
+        services.AddSingleton<ICloudStorageService, SftpService>();
         
         // Register storage service (depends on cloud storage services)
         services.AddSingleton<IStorageService, StorageService>();
