@@ -12,11 +12,17 @@ namespace AI_BACKUP.WindowsService.Models
         public string FileFilter { get; set; } = string.Empty;
         public bool Compress { get; set; }
         public bool Encrypt { get; set; }
+        public string? EncryptionKey { get; set; }
         public int RetentionDays { get; set; }
         public string Schedule { get; set; } = string.Empty;
         public DateTime NextRunTime { get; set; }
         public Guid StorageConfigId { get; set; }
         public DatabaseSettings? DatabaseSettings { get; set; }
+        
+        // Versioning properties
+        public bool UseDeltaCompression { get; set; } = true;
+        public int RetentionCount { get; set; } = 10;
+        public bool KeepFirstBackup { get; set; } = true;
     }
 
     public enum BackupType
@@ -26,7 +32,10 @@ namespace AI_BACKUP.WindowsService.Models
         MSSQLDatabase,
         MySQLDatabase,
         PostgreSQLDatabase,
-        MongoDBDatabase
+        MongoDBDatabase,
+        Reference,
+        Delta,
+        Full
     }
 
     public enum BackupJobStatus
@@ -50,5 +59,6 @@ namespace AI_BACKUP.WindowsService.Models
         public bool UseIntegratedSecurity { get; set; }
         public bool IncludeSchema { get; set; } = true;
         public bool IncludeData { get; set; } = true;
+        public bool UseSsl { get; set; } = false;
     }
 }
