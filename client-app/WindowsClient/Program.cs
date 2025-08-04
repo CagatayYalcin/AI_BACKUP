@@ -32,8 +32,14 @@ IHost host = Host.CreateDefaultBuilder(args)
         services.AddSingleton<IFileSystemService, FileSystemService>();
         services.AddSingleton<IEncryptionService, EncryptionService>();
         services.AddSingleton<ICompressionService, CompressionService>();
-        services.AddSingleton<IStorageService, StorageService>();
         services.AddSingleton<IDatabaseBackupService, DatabaseBackupService>();
+        
+        // Register cloud storage services
+        services.AddSingleton<ICloudStorageService, GoogleDriveService>();
+        services.AddSingleton<ICloudStorageService, OneDriveService>();
+        
+        // Register storage service (depends on cloud storage services)
+        services.AddSingleton<IStorageService, StorageService>();
         
         // Register background services
         services.AddHostedService<BackupWorker>();
