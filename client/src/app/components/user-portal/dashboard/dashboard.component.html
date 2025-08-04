@@ -1,0 +1,180 @@
+<div class="dashboard-container">
+  <h1>Kontrol Paneli</h1>
+
+  <div class="dashboard-overview">
+    <div class="overview-card">
+      <div class="card-header">
+        <h3>Abonelik Durumu</h3>
+      </div>
+      <div class="card-body" *ngIf="!loading.subscription && activeSubscription">
+        <div class="subscription-info">
+          <p><strong>Plan:</strong> {{ activeSubscription.subscriptionPlan?.name }}</p>
+          <p><strong>Durum:</strong> {{ activeSubscription.status }}</p>
+          <p><strong>Bitiş Tarihi:</strong> {{ activeSubscription.endDate | date:'dd.MM.yyyy' }}</p>
+        </div>
+        <a routerLink="/user/subscription" class="btn btn-primary">Abonelik Detayları</a>
+      </div>
+      <div class="card-body" *ngIf="!loading.subscription && !activeSubscription">
+        <p>Aktif aboneliğiniz bulunmamaktadır.</p>
+        <a routerLink="/pricing" class="btn btn-primary">Abonelik Satın Al</a>
+      </div>
+      <div class="card-body" *ngIf="loading.subscription">
+        <p>Yükleniyor...</p>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <div class="card-header">
+        <h3>Depolama Kullanımı</h3>
+      </div>
+      <div class="card-body">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getStorageUsagePercentage()"></div>
+          </div>
+          <div class="progress-text">
+            {{ storageUsage | number:'1.1-1' }} GB / {{ storageLimit }} GB ({{ getStorageUsagePercentage() | number:'1.0-0' }}%)
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="overview-card">
+      <div class="card-header">
+        <h3>İstemci Kullanımı</h3>
+      </div>
+      <div class="card-body">
+        <div class="progress-container">
+          <div class="progress-bar">
+            <div class="progress-fill" [style.width.%]="getClientUsagePercentage()"></div>
+          </div>
+          <div class="progress-text">
+            {{ clientCount }} / {{ clientLimit }} İstemci ({{ getClientUsagePercentage() | number:'1.0-0' }}%)
+          </div>
+        </div>
+        <a routerLink="/user/clients" class="btn btn-primary">İstemcileri Yönet</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-sections">
+    <div class="section-card">
+      <div class="card-header">
+        <h3>Son Yedekleme İşleri</h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading.backupJobs">
+          <p>Yükleniyor...</p>
+        </div>
+        <div *ngIf="!loading.backupJobs && recentBackupJobs.length === 0">
+          <p>Henüz yedekleme işi oluşturulmamış.</p>
+          <a routerLink="/user/backup-jobs/create" class="btn btn-primary">Yeni Yedekleme İşi Oluştur</a>
+        </div>
+        <table *ngIf="!loading.backupJobs && recentBackupJobs.length > 0" class="data-table">
+          <thead>
+            <tr>
+              <th>İsim</th>
+              <th>İstemci</th>
+              <th>Tür</th>
+              <th>Durum</th>
+              <th>Son Çalışma</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let job of recentBackupJobs">
+              <td><a [routerLink]="['/user/backup-jobs', job.id]">{{ job.name }}</a></td>
+              <td>{{ job.client?.name }}</td>
+              <td>{{ job.backupType }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="'status-' + job.status.toLowerCase()">
+                  {{ job.status }}
+                </span>
+              </td>
+              <td>{{ job.updatedAt | date:'dd.MM.yyyy HH:mm' }}</td>
+            </tr>
+          </tbody>
+        </table>
+        <div *ngIf="!loading.backupJobs && recentBackupJobs.length > 0" class="table-footer">
+          <a routerLink="/user/backup-jobs" class="btn btn-secondary">Tüm Yedekleme İşlerini Görüntüle</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-card">
+      <div class="card-header">
+        <h3>Son Yedekleme Çalışmaları</h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading.backupRuns">
+          <p>Yükleniyor...</p>
+        </div>
+        <div *ngIf="!loading.backupRuns && recentBackupRuns.length === 0">
+          <p>Henüz yedekleme çalışması bulunmamaktadır.</p>
+        </div>
+        <table *ngIf="!loading.backupRuns && recentBackupRuns.length > 0" class="data-table">
+          <thead>
+            <tr>
+              <th>Yedekleme İşi</th>
+              <th>Durum</th>
+              <th>Başlangıç</th>
+              <th>Bitiş</th>
+              <th>Boyut</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let run of recentBackupRuns">
+              <td>{{ run.backupJob?.name }}</td>
+              <td>
+                <span class="status-badge" [ngClass]="'status-' + run.status.toLowerCase()">
+                  {{ run.status }}
+                </span>
+              </td>
+              <td>{{ run.startTime | date:'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ run.endTime | date:'dd.MM.yyyy HH:mm' }}</td>
+              <td>{{ (run.sizeBytes / 1024 / 1024) | number:'1.2-2' }} MB</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="dashboard-sections">
+    <div class="section-card">
+      <div class="card-header">
+        <h3>İstemciler</h3>
+      </div>
+      <div class="card-body">
+        <div *ngIf="loading.clients">
+          <p>Yükleniyor...</p>
+        </div>
+        <div *ngIf="!loading.clients && clients.length === 0">
+          <p>Henüz istemci eklenmemiş.</p>
+          <a routerLink="/user/clients/create" class="btn btn-primary">Yeni İstemci Ekle</a>
+        </div>
+        <div *ngIf="!loading.clients && clients.length > 0" class="client-grid">
+          <div *ngFor="let client of clients.slice(0, 4)" class="client-card">
+            <div class="client-header">
+              <h4>{{ client.name }}</h4>
+              <span class="status-badge" [ngClass]="'status-' + client.status.toLowerCase()">
+                {{ client.status }}
+              </span>
+            </div>
+            <div class="client-body">
+              <p><strong>Tür:</strong> {{ client.clientType }}</p>
+              <p><strong>İşletim Sistemi:</strong> {{ client.operatingSystem || 'Belirtilmemiş' }}</p>
+              <p><strong>Son Görülme:</strong> {{ client.lastSeenAt | date:'dd.MM.yyyy HH:mm' || 'Hiç' }}</p>
+              <p><strong>Depolama:</strong> {{ client.storageUsageGb | number:'1.2-2' }} GB</p>
+            </div>
+            <div class="client-footer">
+              <a [routerLink]="['/user/clients', client.id]" class="btn btn-secondary">Detaylar</a>
+            </div>
+          </div>
+        </div>
+        <div *ngIf="!loading.clients && clients.length > 4" class="table-footer">
+          <a routerLink="/user/clients" class="btn btn-secondary">Tüm İstemcileri Görüntüle</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

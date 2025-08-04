@@ -1,0 +1,98 @@
+<div class="home-container">
+  <section class="hero">
+    <div class="hero-content">
+      <h1>AI Backup - Güvenli ve Kolay Yedekleme Çözümü</h1>
+      <p>Dosyalarınızı, klasörlerinizi ve veritabanlarınızı güvenle yedekleyin ve istediğiniz zaman erişin.</p>
+      <div class="hero-buttons">
+        <a routerLink="/register" class="btn btn-primary">Hemen Başlayın</a>
+        <a routerLink="/features" class="btn btn-secondary">Özellikler</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="features-overview">
+    <h2>Neden AI Backup?</h2>
+    <div class="features-grid">
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <h3>Güvenli Yedekleme</h3>
+        <p>Verileriniz AES-256 şifreleme ile korunur ve güvenli bir şekilde saklanır.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-cloud"></i>
+        </div>
+        <h3>Çoklu Bulut Desteği</h3>
+        <p>Google Drive, Microsoft OneDrive ve daha fazlası ile entegrasyon.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-database"></i>
+        </div>
+        <h3>Veritabanı Yedekleme</h3>
+        <p>MSSQL, MySQL, PostgreSQL ve diğer veritabanlarını kolayca yedekleyin.</p>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">
+          <i class="fas fa-clock"></i>
+        </div>
+        <h3>Otomatik Zamanlama</h3>
+        <p>Yedekleme işlemlerini otomatikleştirin ve zamanlamayı özelleştirin.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="subscription-plans" *ngIf="!loading && subscriptionPlans.length > 0">
+    <h2>Abonelik Planları</h2>
+    <div class="plans-grid">
+      <div class="plan-card" *ngFor="let plan of subscriptionPlans">
+        <h3>{{ plan.name }}</h3>
+        <div class="plan-price">
+          <span class="price">{{ plan.monthlyPrice | currency:'₺' }}</span>
+          <span class="period">/ay</span>
+        </div>
+        <ul class="plan-features">
+          <li>{{ plan.maxClients }} istemci</li>
+          <li>{{ plan.maxStorageGb }} GB depolama</li>
+          <li>7/24 destek</li>
+          <li>Otomatik yedekleme</li>
+        </ul>
+        <a routerLink="/pricing" class="btn btn-primary">Detayları Gör</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="testimonials">
+    <h2>Müşterilerimiz Ne Diyor?</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>"AI Backup sayesinde şirketimizin verilerini güvenle yedekliyoruz. Kullanımı çok kolay ve destek ekibi her zaman yardımcı oluyor."</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-name">Ahmet Yılmaz</div>
+          <div class="author-title">BT Yöneticisi, XYZ Şirketi</div>
+        </div>
+      </div>
+      <div class="testimonial-card">
+        <div class="testimonial-content">
+          <p>"Veritabanı yedekleme özelliği gerçekten harika. Artık yedekleme konusunda endişelenmiyoruz."</p>
+        </div>
+        <div class="testimonial-author">
+          <div class="author-name">Ayşe Kaya</div>
+          <div class="author-title">Yazılım Geliştirici, ABC Teknoloji</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="cta">
+    <div class="cta-content">
+      <h2>Verilerinizi Güvence Altına Alın</h2>
+      <p>Hemen ücretsiz denemeye başlayın ve AI Backup'ın sunduğu avantajlardan yararlanın.</p>
+      <a routerLink="/register" class="btn btn-primary">Ücretsiz Deneyin</a>
+    </div>
+  </section>
+</div>
